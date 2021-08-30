@@ -10,7 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	main(void)
+#include <stdlib.h>
+#include <signal.h>
+#include "ft_printf.h"
+
+void	help(char *client)
 {
-	return (0);
+	ft_printf("Usage: %s SERVER_PID MESSAGE\n", client);
+}
+
+int	main(int argc, char *argv[])
+{
+	int	pid;
+
+	if (argc != 3)
+	{
+		help(argv[0]);
+		return (EXIT_FAILURE);
+	}
+	pid = ft_atoi(argv[1]);
+	kill(pid, SIGUSR1);
+	return (EXIT_SUCCESS);
 }

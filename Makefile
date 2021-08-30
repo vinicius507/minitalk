@@ -9,16 +9,29 @@ SERVER_SRC = $(SRC_DIR)/server.c
 CLIENT = client
 SERVER = server
 
+LIBFTPRINTF_DIR = ./ft_printf
+LIBFTPRINTF = $(LIBFTPRINTF_DIR)/libftprintf.a
+
+LIBS = -L$(LIBFTPRINTF_DIR) -lftprintf
+
+INCLUDES = $(LIBFTPRINTF_DIR)/includes $(LIBFTPRINTF_DIR)/libft/includes
+INCLUDES := $(addprefix -I,$(INCLUDES))
+
 RM = rm -f
 
-all: $(CLIENT) $(SERVER)
+all: $(LIBFTPRINTF) $(CLIENT) $(SERVER)
 
 %: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $< $(LIBS) -o $@
 
-fclean:
+clean:
 	$(RM) $(CLIENT) $(SERVER)
 
+fclean: clean
+
 re: fclean all
+
+$(LIBFTPRINTF):
+	make -C $(LIBFTPRINTF_DIR)
 
 .PHONY: all fclean re

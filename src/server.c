@@ -60,7 +60,6 @@ int	main(void)
 	ft_printf("PID: %d\n", getpid());
 	register_actions();
 	while (1)
-		if (pause())
-			return (EXIT_FAILURE);
+		pause();
 	return (0);
 }

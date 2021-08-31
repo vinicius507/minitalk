@@ -19,6 +19,35 @@ void	help(char *client)
 	ft_printf("Usage: %s SERVER_PID MESSAGE\n", client);
 }
 
+void	send_str(int pid, const char *str)
+{
+	char	byte;
+	int		counter;
+
+	while (*str)
+	{
+		byte = *str;
+		counter = 1 << 7;
+		while (counter)
+		{
+			if (counter & byte)
+			{
+				if (kill(pid, SIGUSR1))
+					exit(EXIT_FAILURE);
+			}
+			else
+			{
+				if (kill(pid, SIGUSR2))
+					exit(EXIT_FAILURE);
+			}
+			if (usleep(10))
+				exit(EXIT_FAILURE);
+			counter >>= 1;
+		}
+		str++;
+	}
+}
+
 int	main(int argc, char *argv[])
 {
 	int	pid;
@@ -29,6 +58,6 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 	pid = ft_atoi(argv[1]);
-	kill(pid, SIGUSR1);
+	send_str(pid, argv[2]);
 	return (EXIT_SUCCESS);
 }

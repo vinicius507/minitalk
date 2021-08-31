@@ -19,6 +19,20 @@ void	help(char *client)
 	ft_printf("Usage: %s SERVER_PID MESSAGE\n", client);
 }
 
+void	send_signal(int pid, int bit)
+{
+	int	signal;
+
+	if (bit)
+		signal = SIGUSR1;
+	else
+		signal = SIGUSR2;
+	if (kill(pid, signal))
+		exit(EXIT_FAILURE);
+	if (usleep(10))
+		exit(EXIT_FAILURE);
+}
+
 void	send_str(int pid, const char *str)
 {
 	char	byte;
@@ -31,21 +45,16 @@ void	send_str(int pid, const char *str)
 		while (counter)
 		{
 			if (counter & byte)
-			{
-				if (kill(pid, SIGUSR1))
-					exit(EXIT_FAILURE);
-			}
+				send_signal(pid, 1);
 			else
-			{
-				if (kill(pid, SIGUSR2))
-					exit(EXIT_FAILURE);
-			}
-			if (usleep(10))
-				exit(EXIT_FAILURE);
+				send_signal(pid, 0);
 			counter >>= 1;
 		}
 		str++;
 	}
+	counter = 8;
+	while (counter--)
+		send_signal(pid, 0);
 }
 
 int	main(int argc, char *argv[])

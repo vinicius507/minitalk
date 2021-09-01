@@ -27,7 +27,8 @@ static void	callback(int signum)
 	g_counter++;
 	if (g_counter == 8)
 	{
-		ft_putchar(g_current);
+		if (g_current)
+			ft_printf("%c", g_current);
 		g_counter = 0;
 		g_current = 0;
 	}

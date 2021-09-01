@@ -15,22 +15,21 @@
 #include <unistd.h>
 #include "ft_printf.h"
 
-static int	g_counter = 0;
-static char	g_current = '\0';
-
-static void	callback(int signum)
+void	callback(int signum)
 {
-	if (g_current)
-		g_current = (g_current << 1) | (signum == SIGUSR1);
+	static int	counter;
+	static char	current;
+
+	if (current)
+		current = (current << 1) | (signum == SIGUSR1);
 	else
-		g_current = (signum == SIGUSR1);
-	g_counter++;
-	if (g_counter == 8)
+		current = (signum == SIGUSR1);
+	counter++;
+	if (counter >= 7)
 	{
-		if (g_current)
-			ft_printf("%c", g_current);
-		g_counter = 0;
-		g_current = 0;
+		counter = 0;
+		ft_printf("%c", current);
+		current = 0;
 	}
 	(void)signum;
 }

@@ -29,7 +29,7 @@ void	send_signal(int pid, int bit)
 		signal = SIGUSR2;
 	if (kill(pid, signal))
 		exit(EXIT_FAILURE);
-	if (usleep(10))
+	if (usleep(100))
 		exit(EXIT_FAILURE);
 }
 
@@ -41,7 +41,7 @@ void	send_str(int pid, const char *str)
 	while (*str)
 	{
 		byte = *str;
-		counter = 1 << 7;
+		counter = 1 << 6;
 		while (counter)
 		{
 			if (counter & byte)
@@ -52,7 +52,7 @@ void	send_str(int pid, const char *str)
 		}
 		str++;
 	}
-	counter = 8;
+	counter = 7;
 	while (counter--)
 		send_signal(pid, 0);
 }

@@ -31,6 +31,9 @@ fclean: clean
 
 re: fclean all
 
+run: all
+	./$(SERVER)
+
 $(LIBFTPRINTF):
 	make -C $(LIBFTPRINTF_DIR)
 

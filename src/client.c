@@ -14,6 +14,8 @@
 #include <signal.h>
 #include "ft_printf.h"
 
+static int	g_response_received;
+
 void	help(char *client)
 {
 	ft_printf("Usage: %s SERVER_PID MESSAGE\n", client);
@@ -29,8 +31,9 @@ void	send_signal(int pid, int bit)
 		signal = SIGUSR2;
 	if (kill(pid, signal))
 		exit(EXIT_FAILURE);
-	if (usleep(100))
-		exit(EXIT_FAILURE);
+	while (g_response_received == 0)
+		;
+	g_response_received = 0;
 }
 
 void	send_str(int pid, const char *str)
@@ -57,15 +60,25 @@ void	send_str(int pid, const char *str)
 		send_signal(pid, 0);
 }
 
+void	callback(int signum)
+{
+	g_response_received = 1;
+	(void)signum;
+}
+
 int	main(int argc, char *argv[])
 {
-	int	pid;
+	int					pid;
+	struct sigaction	action;
 
 	if (argc != 3)
 	{
 		help(argv[0]);
 		return (EXIT_FAILURE);
 	}
+	ft_bzero(&action, sizeof(struct sigaction));
+	action.sa_handler = callback;
+	sigaction(SIGUSR1, &action, NULL);
 	pid = ft_atoi(argv[1]);
 	send_str(pid, argv[2]);
 	return (EXIT_SUCCESS);

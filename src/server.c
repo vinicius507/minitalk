@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include "ft_printf.h"
 
-void	callback(int signum)
+void	callback(int signum, siginfo_t *siginfo, void *context)
 {
 	static int	counter;
 	static char	current;
@@ -31,7 +31,9 @@ void	callback(int signum)
 		ft_printf("%c", current);
 		current = 0;
 	}
+	kill(siginfo->si_pid, SIGUSR1);
 	(void)signum;
+	(void)context;
 }
 
 int	register_actions(void)
@@ -47,7 +49,8 @@ int	register_actions(void)
 		exit(EXIT_FAILURE);
 	ft_bzero(&action, sizeof(struct sigaction));
 	action.sa_mask = mask;
-	action.sa_handler = callback;
+	action.sa_sigaction = callback;
+	action.sa_flags = SA_SIGINFO;
 	if (sigaction(SIGUSR1, &action, NULL))
 		exit(EXIT_FAILURE);
 	if (sigaction(SIGUSR2, &action, NULL))

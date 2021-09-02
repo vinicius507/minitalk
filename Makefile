@@ -6,6 +6,10 @@ SRC_DIR = ./src
 CLIENT_SRC = $(SRC_DIR)/client.c
 SERVER_SRC = $(SRC_DIR)/server.c
 
+CLIENT_BONUS = $(SRC_DIR)/client_bonus.c
+SERVER_BONUS = $(SRC_DIR)/server_bonus.c
+BONUS_SRC := $(CLIENT_BONUS) $(SERVER_BONUS)
+
 CLIENT = client
 SERVER = server
 
@@ -31,7 +35,7 @@ fclean: clean
 
 re: fclean all
 
-run: all
+run: re
 	./$(SERVER)
 
 $(LIBFTPRINTF):

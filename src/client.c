@@ -44,7 +44,7 @@ void	send_str(int pid, const char *str)
 	while (*str)
 	{
 		byte = *str;
-		counter = 1 << 6;
+		counter = 1 << 7;
 		while (counter)
 		{
 			if (counter & byte)
@@ -55,7 +55,7 @@ void	send_str(int pid, const char *str)
 		}
 		str++;
 	}
-	counter = 7;
+	counter = 8;
 	while (counter--)
 		send_signal(pid, 0);
 }
@@ -78,6 +78,7 @@ int	main(int argc, char *argv[])
 	}
 	ft_bzero(&action, sizeof(struct sigaction));
 	action.sa_handler = callback;
+	// TODO: error handling
 	sigaction(SIGUSR1, &action, NULL);
 	pid = ft_atoi(argv[1]);
 	send_str(pid, argv[2]);

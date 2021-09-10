@@ -12,7 +12,6 @@
 
 #include <signal.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include "ft_printf.h"
 
 char	*realloc_str(char *str, size_t size)
@@ -21,27 +20,45 @@ char	*realloc_str(char *str, size_t size)
 
 	if (str == NULL)
 		return (ft_calloc(size, sizeof(char)));
-	ft_printf("malloc size: %d\n", size);
 	ptr = ft_calloc(size, sizeof(char));
 	ft_strlcpy(ptr, str, size + 1);
 	free(str);
 	return (ptr);
 }
 
+void	handle_new_char(char **str, int *char_counter, int current)
+{
+	*str = realloc_str(*str, *char_counter + 2);
+	if (current)
+	{
+		(*str)[*char_counter] = current;
+		(*char_counter)++;
+	}
+	else
+	{
+		*char_counter = 0;
+		ft_printf("%s", *str);
+		free(*str);
+		*str = NULL;
+	}
+}
+
 void	callback(int signum, siginfo_t *siginfo, void *context)
 {
+	static char	*str;
 	static int	counter;
 	static char	current;
+	static int	char_counter;
 
 	if (current)
 		current = (current << 1) | (signum == SIGUSR1);
 	else
 		current = (signum == SIGUSR1);
 	counter++;
-	if (counter >= 7)
+	if (counter >= 8)
 	{
+		handle_new_char(&str, &char_counter, current);
 		counter = 0;
-		ft_printf("%c", current);
 		current = 0;
 	}
 	kill(siginfo->si_pid, SIGUSR1);

@@ -15,6 +15,19 @@
 #include <unistd.h>
 #include "ft_printf.h"
 
+char	*realloc_str(char *str, size_t size)
+{
+	char	*ptr;
+
+	if (str == NULL)
+		return (ft_calloc(size, sizeof(char)));
+	ft_printf("malloc size: %d\n", size);
+	ptr = ft_calloc(size, sizeof(char));
+	ft_strlcpy(ptr, str, size + 1);
+	free(str);
+	return (ptr);
+}
+
 void	callback(int signum, siginfo_t *siginfo, void *context)
 {
 	static int	counter;

@@ -29,6 +29,7 @@ all: $(LIBFTPRINTF) $(CLIENT) $(SERVER)
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(LIBS) -o $@
 
 clean:
+	make fclean -C $(LIBFTPRINTF_DIR)
 	$(RM) $(CLIENT) $(SERVER)
 
 fclean: clean

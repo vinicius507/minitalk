@@ -16,12 +16,13 @@
 
 static int	g_response_received;
 
-void	help(char *client)
+void	error(const char *client)
 {
 	ft_printf("Usage: %s SERVER_PID MESSAGE\n", client);
+	exit(EXIT_FAILURE);
 }
 
-void	send_signal(int pid, int bit)
+void	send_signal(int pid, int bit, const char *client)
 {
 	int	signal;
 
@@ -30,13 +31,13 @@ void	send_signal(int pid, int bit)
 	else
 		signal = SIGUSR2;
 	if (kill(pid, signal))
-		exit(EXIT_FAILURE);
+		error(client);
 	while (g_response_received == 0)
 		;
 	g_response_received = 0;
 }
 
-void	send_str(int pid, const char *str)
+void	send_str(int pid, const char *str, const char *client)
 {
 	char	byte;
 	int		counter;
@@ -48,16 +49,16 @@ void	send_str(int pid, const char *str)
 		while (counter)
 		{
 			if (counter & byte)
-				send_signal(pid, 1);
+				send_signal(pid, 1, client);
 			else
-				send_signal(pid, 0);
+				send_signal(pid, 0, client);
 			counter >>= 1;
 		}
 		str++;
 	}
 	counter = 8;
 	while (counter--)
-		send_signal(pid, 0);
+		send_signal(pid, 0, client);
 }
 
 void	callback(int signum)
@@ -72,15 +73,12 @@ int	main(int argc, char *argv[])
 	struct sigaction	action;
 
 	if (argc != 3)
-	{
-		help(argv[0]);
-		return (EXIT_FAILURE);
-	}
+		error(argv[0]);
 	ft_bzero(&action, sizeof(struct sigaction));
 	action.sa_handler = callback;
-	// TODO: error handling
-	sigaction(SIGUSR1, &action, NULL);
+	if (sigaction(SIGUSR1, &action, NULL))
+		return (EXIT_FAILURE);
 	pid = ft_atoi(argv[1]);
-	send_str(pid, argv[2]);
+	send_str(pid, argv[2], argv[0]);
 	return (EXIT_SUCCESS);
 }

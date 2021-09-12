@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <signal.h>
-#include <stdlib.h>
 #include "ft_printf.h"
 
 char	*realloc_str(char *str, size_t size)
@@ -37,7 +36,7 @@ void	handle_new_char(char **str, int *char_counter, int current)
 	else
 	{
 		*char_counter = 0;
-		ft_printf("%s", *str);
+		ft_printf("[SERVER] Received message from client. Content:\n%s\n\n", *str);
 		free(*str);
 		*str = NULL;
 	}
@@ -90,7 +89,7 @@ int	register_actions(void)
 
 int	main(void)
 {
-	ft_printf("PID: %d\n", getpid());
+	ft_printf("[SERVER] running on PID: %d\n", getpid());
 	register_actions();
 	while (1)
 		pause();

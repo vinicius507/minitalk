@@ -68,13 +68,15 @@
       mkShell = pkgs.mkShell.override {inherit (pkgs.llvmPackages_12) stdenv;};
     in {
       default = mkShell {
-        packages = with pkgs; [
-          bear
-          clang-tools_12
-          gnumake
-          norminette
-          valgrind
-        ];
+        packages = with pkgs;
+          [
+            bear
+            clang-tools_12
+            gnumake
+            norminette
+            valgrind
+          ]
+          ++ [pkgs.libft pkgs.libftprintf];
       };
     });
   };

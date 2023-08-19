@@ -10,7 +10,7 @@
 ##                                                                            ##
 ## ########################################################################## ##
 
-CC = clang
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 SRC_DIR = ./src
@@ -25,17 +25,17 @@ BONUS_SRC := $(CLIENT_BONUS) $(SERVER_BONUS)
 CLIENT = client
 SERVER = server
 
-LIBFTPRINTF_DIR = ./ft_printf
-LIBFTPRINTF = $(LIBFTPRINTF_DIR)/libftprintf.a
+LIBFTPRINTF_DIR ?= ./ft_printf
+LIBFT_DIR ?= ./ft_printf/libft
 
-LIBS = -L$(LIBFTPRINTF_DIR) -lftprintf
+LIBS = -L$(LIBFTPRINTF_DIR)/lib -lftprintf
 
-INCLUDES = $(LIBFTPRINTF_DIR)/includes $(LIBFTPRINTF_DIR)/libft/includes
+INCLUDES = $(LIBFTPRINTF_DIR)/include
 INCLUDES := $(addprefix -I,$(INCLUDES))
 
 RM = rm -f
 
-all: $(LIBFTPRINTF) $(CLIENT) $(SERVER)
+all: $(CLIENT) $(SERVER)
 
 %: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(LIBS) -o $@
@@ -50,8 +50,5 @@ re: fclean all
 
 run: re
 	./$(SERVER)
-
-$(LIBFTPRINTF):
-	make -C $(LIBFTPRINTF_DIR)
 
 .PHONY: all fclean re

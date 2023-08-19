@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include <signal.h>
-#include "ft_printf.h"
+#include <ft_printf.h>
 
 char	*realloc_str(char *str, size_t size)
 {

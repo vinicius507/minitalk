@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include <unistd.h>
 #include <signal.h>
-#include <ft_printf.h>
 
 char	*realloc_str(char *str, size_t size)
 {
@@ -37,7 +37,9 @@ void	handle_new_char(char **str, int *char_counter, int current)
 	else
 	{
 		*char_counter = 0;
-		ft_printf("[SERVER] Received message from client. Content:\n%s\n\n", *str);
+		ft_printf("[SERVER] Received message from client.\n");
+		ft_printf("[CLIENT] %s\n", *str);
+		ft_printf("[SERVER] End of client message.\n");
 		free(*str);
 		*str = NULL;
 	}

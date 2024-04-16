@@ -25,12 +25,10 @@ BONUS_SRC := $(CLIENT_BONUS) $(SERVER_BONUS)
 CLIENT = client
 SERVER = server
 
-LIBFTPRINTF_DIR ?= ./ft_printf
-LIBFT_DIR ?= ./ft_printf/libft
+LIBFT_DIR ?= ./libft
+LIBS = -L$(LIBFT_DIR)/lib -lft
 
-LIBS = -L$(LIBFTPRINTF_DIR)/lib -lftprintf
-
-INCLUDES = $(LIBFTPRINTF_DIR)/include
+INCLUDES = $(LIBFT_DIR)/include
 INCLUDES := $(addprefix -I,$(INCLUDES))
 
 RM = rm -f
@@ -41,7 +39,7 @@ all: $(CLIENT) $(SERVER)
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(LIBS) -o $@
 
 clean:
-	make fclean -C $(LIBFTPRINTF_DIR)
+	make fclean -C $(LIBFT_DIR)
 	$(RM) $(CLIENT) $(SERVER)
 
 fclean: clean

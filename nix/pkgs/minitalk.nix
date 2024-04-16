@@ -2,7 +2,6 @@
   lib,
   stdenv,
   libft,
-  libftprintf,
 }:
 stdenv.mkDerivation {
   pname = "minitalk";
@@ -12,7 +11,7 @@ stdenv.mkDerivation {
     libft
   ];
   buildPhase = ''
-    export LIBFTPRINTF_DIR="${libftprintf}"
+    export LIBFT_DIR="${libft}"
     make
   '';
   installPhase = ''

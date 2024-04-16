@@ -1,25 +1,15 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs";
-    ft-nix = {
-      url = "github:vinicius507/42-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     libft = {
       url = "github:vinicius507/libft";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    ft_printf = {
-      url = "github:vinicius507/ft_printf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = {
     self,
     nixpkgs,
-    ft-nix,
     libft,
-    ft_printf,
   }: let
     allSystems = [
       "x86_64-linux"
@@ -31,9 +21,8 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
-              ft-nix.overlays.norminette
-              ft_printf.overlays.libftprintf
               libft.overlays.libft
+              libft.overlays.devshell
               self.overlays.minitalk
             ];
           };
@@ -54,7 +43,7 @@
     packages = forEachSystem ({pkgs}: {
       default = pkgs.minitalk;
       minitalk = import ./nix/pkgs/minitalk.nix {
-        inherit (pkgs) lib libft libftprintf;
+        inherit (pkgs) lib libft;
         inherit (pkgs.llvmPackages_12) stdenv;
       };
     });
@@ -64,19 +53,15 @@
         minitalk = self.packages.${final.system}.minitalk;
       };
     };
-    devShells = forEachSystem ({pkgs}: let
-      mkShell = pkgs.mkShell.override {inherit (pkgs.llvmPackages_12) stdenv;};
-    in {
-      default = mkShell {
-        packages = with pkgs;
-          [
-            bear
-            clang-tools_12
-            gnumake
-            norminette
-            valgrind
-          ]
-          ++ [pkgs.libft pkgs.libftprintf];
+    devShells = forEachSystem ({pkgs}: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          bear
+          clang-tools_12
+          gnumake
+          norminette
+          valgrind
+        ];
       };
     });
   };

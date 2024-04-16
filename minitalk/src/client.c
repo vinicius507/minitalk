@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include <signal.h>
-#include <ft_printf.h>
+#include <unistd.h>
 
 static int	g_response_received;
 
@@ -34,6 +35,7 @@ void	send_signal(int pid, int bit, const char *client)
 	while (g_response_received == 0)
 		;
 	g_response_received = 0;
+	usleep(3000);
 }
 
 void	send_str(int pid, const char *str, const char *client)
